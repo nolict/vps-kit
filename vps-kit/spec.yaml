@@ -2,7 +2,22 @@ schemaVersion: "2"
 kind: sandbox
 name: vps
 displayName: Ubuntu VPS
-description: Root shell box (Docker shell image)
+description: Root shell box (Docker shell image) with generic PATH for package-manager installers
 sandbox:
   image: docker.io/sbx/shell-docker-image:latest
   entrypoint: ["bash"]
+setup:
+  install:
+    - command: |
+        cat >> /etc/sandbox-persistent.sh <<'SBXENV'
+        # Source user shell profiles in every shell so package-manager PATH additions
+        # (bun, cargo, deno, volta, pnpm, nvm, ...) show up in exec/attach too.
+        # Guard against recursion.
+        if [ -z "${SBX_P_LOADED:-}" ]; then
+          export SBX_P_LOADED=1
+          [ -f "$HOME/.bash_profile" ] && . "$HOME/.bash_profile"
+          [ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
+        fi
+        SBXENV
+      user: "0"
+      description: Generic PATH fix — source shell profiles in every shell
