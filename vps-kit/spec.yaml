@@ -1,0 +1,20 @@
+schemaVersion: "2"
+kind: sandbox
+name: vps
+displayName: Ubuntu VPS
+description: Root shell box with common tools, run with `sbx --cloud run ./vps-kit`
+sandbox:
+  image: docker.io/sbx/shell-docker-image:latest
+setup:
+  install:
+    - command: |
+        set -e
+        export DEBIAN_FRONTEND=noninteractive
+        apt-get update -qq
+        apt-get install -yqq --no-install-recommends \
+          git curl wget vim nano htop less \
+          sudo net-tools iputils-ping dnsutils tzdata ca-certificates
+        apt-get clean
+        rm -rf /var/lib/apt/lists/*
+      user: "0"
+      description: Install common tools
