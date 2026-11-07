@@ -2,6 +2,7 @@ schemaVersion: "2"
 kind: sandbox
 name: vps
 displayName: Ubuntu VPS
-description: Root shell box (Docker shell image), run with `sbx --cloud run docker.io/fixsed/vps-kit:1.1`
+description: Root shell box (Docker shell image)
 sandbox:
   image: docker.io/sbx/shell-docker-image:latest
+  entrypoint: ["bash"]
